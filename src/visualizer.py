@@ -2,6 +2,7 @@ import torch
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def visualize_point_cloud(data, labels, classes, idx):
@@ -66,4 +67,25 @@ def visualize_point_cloud(data, labels, classes, idx):
     # add title
     fig.update_layout(title_text=f"{key} - 3D Point Cloud Rotation")
 
+    fig.show()
+
+def visualize_transformation(point_cloud, transformation=None):
+    if transformation is None:
+        raise ValueError("transformation must be specified.")
+    transformed_points = transformation(point_cloud)
+    fig, axs = plt.subplots(1, 2, figsize=(10, 5), subplot_kw={"projection": "3d"})
+    axs[0].scatter(
+        point_cloud[..., 0], point_cloud[..., 1], point_cloud[..., 2], c="r", marker="o"
+    )
+    axs[0].set_title("Original Point Cloud")
+
+    axs[1].scatter(
+        transformed_points[..., 0],
+        transformed_points[..., 1],
+        transformed_points[..., 2],
+        c="b",
+        marker="o",
+    )
+    axs[1].set_title("Transformed Point Cloud")
+    fig.tight_layout()
     fig.show()
